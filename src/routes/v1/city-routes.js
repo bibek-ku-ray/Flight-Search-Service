@@ -1,10 +1,11 @@
 const express =require('express')
 const { CityController } = require('../../controllers')
+const { CityMiddlewares } = require('../../middlewares')
 
 const router = express.Router()
 
 // /api/v1/city :: POST
-router.post('/', CityController.createCity)
+router.post('/', CityMiddlewares, CityController.createCity)
 
 // /api/vi/ciyt :: GET
 router.get('/', CityController.getAllCities)
