@@ -17,7 +17,6 @@ module.exports = {
         table: "Cities",
         field: "id"
       }, 
-      onUpdate: "cascade",
       onDelete: "cascade"
     })
   },
