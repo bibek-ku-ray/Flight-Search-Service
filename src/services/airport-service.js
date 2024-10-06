@@ -1,8 +1,8 @@
 const { StatusCodes } = require("http-status-codes");
 const { AirportRepository } = require("../repositories");
-const AppError = require("../utils/app-error");
+const AppError = require("../utils/errors/app-error");
 
-const airportRepository = new AirportRepository()
+const airportRepository = new AirportRepository();
 
 async function createAirport(data) {
     try {

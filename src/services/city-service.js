@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { CityRepository } = require("../repositories");
-const AppError = require("../utils/app-error");
+const AppError = require("../utils/errors/app-error");
 
 const cityRepository = new CityRepository();
 
@@ -45,7 +45,6 @@ async function updateCity(id, data) {
         const city = await cityRepository.update(id, data);
         return city;
     } catch (error) {
-        
         if (error.statusCode == StatusCodes.NOT_FOUND) {
             throw new AppError(
                 "The city you request is not found",

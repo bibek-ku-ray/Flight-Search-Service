@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { AirplainRepository } = require("../repositories");
-const AppError = require("../utils/app-error");
+const AppError = require("../utils/errors/app-error");
 
 const airplainRepository = new AirplainRepository();
 
@@ -69,10 +69,10 @@ async function destroyAirplane(data) {
 
 async function updateAirplane(id, data) {
     try {
-        const response = await airplainRepository.update(id, data)
-        return response
+        const response = await airplainRepository.update(id, data);
+        return response;
     } catch (error) {
-        if(error.name == "SequelizeValidationError"){
+        if (error.name == "SequelizeValidationError") {
             let explanation = [];
             error.errors.forEach((err) => {
                 explanation.push(err.message);
