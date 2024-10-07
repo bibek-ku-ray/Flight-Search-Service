@@ -10,4 +10,7 @@ router.post(
     FlightController.createFlight
 );
 
+// /api/v1/flights?trips=TIA-DEL GET
+router.get("/", FlightController.getAllFights)
+
 module.exports = router;

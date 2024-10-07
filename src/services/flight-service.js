@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const { FlightRepository } = require("../repositories");
 const AppError = require("../utils/errors/app-error");
 const { compareDateTime } = require("../utils/helper/datetime-helper");
+const { Op } = require("sequelize");
 
 const flightRepository = new FlightRepository();
 
@@ -14,7 +15,7 @@ async function createFlight(data) {
             data.departureTime
         );
         console.log(isArrivalLater);
-        
+
         if (!isArrivalLater) {
             throw new AppError(
                 "Arrival time should be greater the departure time",
@@ -25,7 +26,6 @@ async function createFlight(data) {
         // create new flight
         const flight = await flightRepository.create(data);
         return flight;
-
     } catch (error) {
         // if the error is isArrivalLater = false
         if (error instanceof AppError) {
@@ -46,6 +46,64 @@ async function createFlight(data) {
     }
 }
 
+async function getAllFights(query) {
+    let customFilter = {};
+    let sortFilter = [];
+    const endingTripTime = "23:59:59";
+
+    // trip=TIA-DEL
+    if (query.trips) {
+        [departureAirportId, arrivalAirportId] = query.trips.split("-");
+        customFilter.departureAirportId = departureAirportId;
+        customFilter.arrivalAirportId = arrivalAirportId;
+    }
+
+    if (query.price) {
+        [minPrice, maxPrice] = query.price.split("-");
+        customFilter.price = {
+            // default max price is 20000, if not given
+            [Op.between]: [minPrice, maxPrice == undefined ? 20000 : maxPrice],
+        };
+        sortFilter = [["price", "DESC"]];
+    }
+
+    if (query.travellers) {
+        customFilter.travellers = {
+            [Op.gte]: query.travellers,
+        };
+    }
+
+    if (query.tripDate) {
+        customFilter.departureTime = {
+            [Op.between]: [query.tripDate, query.tripDate + endingTripTime],
+        };
+    }
+    
+    if (query.sort) {
+        const params = query.sort.split(",");
+        const sortFilters = params.map((param) => param.split("_"));
+        console.log(sortFilters);
+        
+        sortFilter = sortFilters;
+    }
+
+    try {
+        const flights = await flightRepository.getAllFights(
+            customFilter,
+            sortFilter
+        );
+
+        return flights;
+    } catch (error) {
+        console.log(error);
+        throw new AppError(
+            "Cannot fetch data of all the flights",
+            StatusCodes.INTERNAL_SERVER_ERROR
+        );
+    }
+}
+
 module.exports = {
     createFlight,
+    getAllFights,
 };
