@@ -17,7 +17,7 @@ module.exports = {
             type: Sequelize.INTEGER,
             allowNull: false,
 
-            // adding contraints : FK
+            // adding constraints : FK
             references: {
                 model: "Airplanes",
                 key: "id",
@@ -27,7 +27,7 @@ module.exports = {
         departureAirportId: {
             type: Sequelize.STRING,
             allowNull: false,
-            // adding contraints : FK
+            // adding constraints : FK
             references: {
                 model: "Airports",
                 key: "code",
@@ -37,7 +37,7 @@ module.exports = {
         arrivalAirportId: {
             type: Sequelize.STRING,
             allowNull: false,
-            // adding contraints : FK
+            // adding constraints : FK
             references: {
                 model: "Airports",
                 key: "code",
