@@ -78,12 +78,12 @@ async function getAllFights(query) {
             [Op.between]: [query.tripDate, query.tripDate + endingTripTime],
         };
     }
-    
+
     if (query.sort) {
         const params = query.sort.split(",");
         const sortFilters = params.map((param) => param.split("_"));
         console.log(sortFilters);
-        
+
         sortFilter = sortFilters;
     }
 
@@ -103,7 +103,26 @@ async function getAllFights(query) {
     }
 }
 
+async function getFlight(id) {
+    try {
+        const flight = await flightRepository.get(id);
+        return flight;
+    } catch (error) {
+        if (error.statusCode == StatusCodes.NOT_FOUND) {
+            throw new AppError(
+                "Request flight is not found!",
+                error.statusCode
+            );
+        }
+        throw new AppError(
+            "Cannot fetch the flight",
+            StatusCodes.INTERNAL_SERVER_ERROR
+        );
+    }
+}
+
 module.exports = {
     createFlight,
     getAllFights,
+    getFlight,
 };
