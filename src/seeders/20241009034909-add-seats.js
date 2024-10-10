@@ -96,8 +96,7 @@ module.exports = {
             row: 2,
             col: "F",
             createdAt: new Date(),
-            updatedAt: new Date(),
-            
+            updatedAt: new Date(), 
         },
     ]);
 
