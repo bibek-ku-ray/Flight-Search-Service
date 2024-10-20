@@ -6,7 +6,7 @@ const app = express();
 console.log("Bibek ray");
 
 app.use(express.json())
-app.use(express.urlencoded({extends:true}))
+app.use(express.urlencoded({extends:true}));
 
 app.use('/api', apiRouter)
 
